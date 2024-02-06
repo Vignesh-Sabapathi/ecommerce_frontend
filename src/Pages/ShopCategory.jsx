@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./CSS/ShopCategory.css";
 import Item from "../Components/Item/Item";
-import { Link } from "react-router-dom";
+import data from "../Components/Assets/Products/data.json";
 
 const ShopCategory = (props) => {
 
-  const [allproducts, setAllProducts] = useState([]);
+  const allproducts = Object.values(data);
+  const filteredProducts = allproducts.filter(item => props.category === item.category);
+  console.log("allproducts type:", Array.isArray(allproducts));
+  console.log("allproducts", filteredProducts);
 
-  const fetchInfo = () => { 
-    fetch('http://localhost:4000/allproducts') 
-            .then((res) => res.json()) 
-            .then((data) => setAllProducts(data))
-    }
-
-    useEffect(() => {
-      fetchInfo();
-    }, [])
+  
     
   return (
     <div className="shopcategory">
@@ -25,9 +20,12 @@ const ShopCategory = (props) => {
       </div>
       <div className="shopcategory-products">
         {allproducts.map((item,i) => {
+          console.log(item);
             if(props.category===item.category)
             {
-              return <Item id={item.id} key={i} name={item.name} image={item.image}  new_price={item.new_price} />;
+              const imagePath = `../Assets/Products/${item.image}`;
+
+              return <Item id={item.id} key={i} name={item.name} image={imagePath}  new_price={item.new_price} />;
             }
             else
             {
